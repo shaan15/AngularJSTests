@@ -1,0 +1,131 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+<div ng-app = "myApp" ng-controller="myCtrl">
+
+<form id="selectionForm">
+    <input type="checkbox" ng-click="toggleAll()" ng-model="isAllSelected">Select all
+    <br/>
+    <div ng-repeat = "option in data" style="margin-left: 50px">
+      <input type="checkbox" ng-model="option.selected" ng-change="optionToggled()" >{{option.name}}
+        <div ng-repeat = "t in option.children" style="margin-left: 50px">
+          <input type="checkbox" ng-model="t.selected" ng-change="subOptionToggled()">{{t.name}}
+          <div ng-repeat = "s in t.children" style="margin-left: 50px">
+            <input type="checkbox" ng-model="s.selected" ng-change="">{{s.name}}
+        </div>
+      </div>  
+  </div>
+</form>
+<script>
+
+
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.data = [
+    {
+      id : 'MBU', name: 'Molecular Bilogical Unit', children: 
+      [
+
+        {id : 'MBUA', name: 'Molecular Bilogical Unit Annex',},
+
+        { id : 'MBUGF',name: 'Molecular Bilogical Unit GF', },
+
+        { id : 'MBUFF',name: 'Molecular Bilogical Unit FF', } 
+      ]
+    },
+    {
+      id : 'DESE',name: 'DESE', children: [
+
+        { id : 'DESEGF',name: 'DESE GF', },
+
+        { id : 'DESEFF',name: 'DESE FF', },
+        {
+          id : 'DESESF', name: 'DESE SF',children: 
+          [
+
+            {id : 'DESEA', name: 'DESE Annexe', }
+          ]
+        },
+      ]
+    },
+
+    {id : 'IISU',name: 'Isro Inertial Systems Unit',},
+
+    {id : 'IPC',name: 'Itegated Polymer Chemistry',},
+
+    {id : 'Maths',name: 'Mathematics',},
+
+    {id : 'Phy',name: 'Physics',},
+
+    {id : 'Chem',name: 'Chemistry',},
+
+    {id : 'Civil',name: 'Civil Engineering',},
+
+    {id : 'Mech',name: 'Mechanical',},
+
+    {id : 'ECE',name: 'Electronics and Communications Engineering',},
+
+    {id : 'INST',name: 'Instrumentation',},
+
+    {id : 'CEDT',name: 'CEDT',},
+
+    {id : 'INSTEF',name: 'INSTEF',},
+  ];  
+
+
+
+ 
+  $scope.optionToggled = function(){
+    $scope.isAllSelected = $scope.data.every(function(itm){ return itm.selected; });
+    angular.forEach($scope.data,function(itm){
+        angular.forEach(itm.children,function(child1){
+          child1.selected=itm.selected;
+            angular.forEach(child1.children,function(child2){
+              child2.selected=itm.selected;
+            });
+        });
+      }
+    );
+  }
+  $scope.subOptionToggled = function(){
+    $scope.isAllSelected = $scope.data.every(function(itm){ return itm.selected; });
+    angular.forEach($scope.data,function(itm){
+        angular.forEach(itm.children,function(child1){
+            angular.forEach(child1.children,function(child2){
+              child2.selected=child1.selected;
+            });
+        });
+    });
+  }
+  $scope.toggleAll = function() {
+    var toggleStatus = $scope.isAllSelected;
+    angular.forEach($scope.data, function(itm){ 
+      itm.selected = toggleStatus; 
+    });
+    angular.forEach($scope.data,function(itm){
+      itm.selected = toggleStatus;
+        angular.forEach(itm.children,function(child1){
+          child1.selected = toggleStatus;
+             angular.forEach(child1.children,function(child2){
+              child2.selected = toggleStatus;
+            });
+        });
+    });
+
+      //angular.forEach($scope.data, function(i){i.selected = toggleStatus; });
+      //angular.forEach($scope.dese, function(j){j.selected = toggleStatus; });
+   
+  }
+
+
+});
+
+
+
+</script>
+  
+
+
+  
+</body>
+</html>
